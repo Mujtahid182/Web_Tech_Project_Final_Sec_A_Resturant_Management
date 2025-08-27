@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Processing | Restaurant Management System</title>
+    <link rel="stylesheet" href="payment.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Payment Processing</h1>
+
+        <div class="payment-section">
+        
+            <div class="bill-summary">
+                <h2>Bill Summary - Table 5</h2>
+                <div class="bill-item">
+                    <span>Burger</span>
+                    <span>Taka 12.99</span>
+                </div>
+                <div class="bill-item">
+                    <span>Salad</span>
+                    <span>Taka 9.99</span>
+                </div>
+                <div class="bill-item">
+                    <span>Coke (2x)</span>
+                    <span>Taka 6.00</span>
+                </div>
+                <div class="bill-item">
+                    <span>Subtotal</span>
+                    <span>Taka 28.98</span>
+                </div>
+                <div class="bill-item">
+                    <span>Tax (8%)</span>
+                    <span>Taka 2.32</span>
+                </div>
+                <div class="bill-total">
+                    <span>Total: Taka 31.30</span>
+                </div>
+            </div>
+
+    
+            <div class="payment-form">
+                <h2>Payment Method</h2>
+                <div class="form-group">
+                    <label for="paymentMethod">Select Method</label>
+                    <select id="paymentMethod">
+                        <option>Cash</option>
+                        <option>Credit Card</option>
+                        <option>Digital Payment (NFC)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tip">Tip Amount</label>
+                    <select id="tip">
+                        <option value="4.70">15% (Taka 4.70)</option>
+                        <option value="5.63">18% (Taka 5.63)</option>
+                        <option value="6.26">20% (Taka 6.26)</option>
+                        <option value="0">Custom</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="processPayment()">Process Payment</button>
+            </div>
+        </div>
+
+        <div class="receipt-section">
+            <div class="receipt-header">RESTAURANT PRO</div>
+            <p>Date: March 14, 2024 • 8:30 PM</p>
+            <p>Table: 5 • Order #1234</p>
+            <hr>
+            <p>Burger ........ Taka 12.99</p>
+            <p>Salad .......... Taka 9.99</p>
+            <p>Coke (2x) ............. Taka 6.00</p>
+            <hr>
+            <p>Subtotal: Taka 28.98</p>
+            <p>Tax: Taka 2.32</p>
+            <p><strong>Total: Taka 31.30</strong></p>
+            <p id="tipLine">Tip: Taka 5.63 (18%)</p>
+            <p id="finalLine"><strong>Final: Taka 36.93</strong></p>
+            <hr>
+            <p style="text-align: center;">Thank you! Visit again!</p>
+        </div>
+    </div>
+
+    <script>
+        function processPayment() {
+            var method = document.getElementById('paymentMethod').value;
+            var tipAmount = parseFloat(document.getElementById('tip').value);
+
+            if (isNaN(tipAmount)) {
+                alert("Please select a valid tip amount.");
+                return;
+            }
+
+            var subtotal = 28.98;
+            var tax = 2.32;
+            var total = subtotal + tax;
+            var finalTotal = total + tipAmount;
+
+      
+            var tipLine = document.getElementById('tipLine');
+            tipLine.textContent = "Tip: Taka " + tipAmount.toFixed(2) + " (" + ((tipAmount / total) * 100).toFixed(0) + "%)";
+
+            
+            var finalLine = document.getElementById('finalLine');
+            finalLine.textContent = "<strong>Final: Taka " + finalTotal.toFixed(2) + "</strong>";
+
+            alert('Payment processed successfully via ' + method + '!\nReceipt has been printed.');
+        }
+    </script>
+</body>
+</html>

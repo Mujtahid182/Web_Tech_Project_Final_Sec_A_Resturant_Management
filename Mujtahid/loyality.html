@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Loyalty Program | Restaurant Management System</title>
+    <link rel="stylesheet" href="loyality.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Loyalty Program</h1>
+
+        <div class="loyalty-card">
+            <h2>Welcome, Mujtahid!</h2>
+            <p>Your Loyalty Points</p>
+            <div class="points-display" id="pointsDisplay">2,450</div>
+            <p>You can redeem rewards below using your points.</p>
+        </div>
+
+       
+        <div class="rewards-catalog">
+            <h2>Rewards Catalog</h2>
+            <div class="reward-item">
+                <div class="reward-info">
+                    <strong>Free Appetizer</strong>
+                    <p>Perfect start to your meal</p>
+                </div>
+                <div class="reward-actions">
+                    <span class="reward-points">500 pts</span>
+                    <button class="btn" onclick="redeemReward('Free Appetizer', 500)">Redeem</button>
+                </div>
+            </div>
+
+            <div class="reward-item">
+                <div class="reward-info">
+                    <strong>$10 Off Main Course</strong>
+                    <p>Save on your favorite dish</p>
+                </div>
+                <div class="reward-actions">
+                    <span class="reward-points">1,000 pts</span>
+                    <button class="btn" onclick="redeemReward('$10 Off Main Course', 1000)">Redeem</button>
+                </div>
+            </div>
+
+            <div class="reward-item">
+                <div class="reward-info">
+                    <strong>Free Dessert</strong>
+                    <p>End your meal on a sweet note</p>
+                </div>
+                <div class="reward-actions">
+                    <span class="reward-points">750 pts</span>
+                    <button class="btn" onclick="redeemReward('Free Dessert', 750)">Redeem</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let userPoints = 2450;
+        const pointsDisplay = document.getElementById("pointsDisplay");
+
+        function updatePoints() {
+            pointsDisplay.textContent = userPoints.toLocaleString();
+        }
+
+        function redeemReward(rewardName, cost) {
+            if (userPoints < cost) {
+                alert("Sorry! You need " + (cost - userPoints) + " more points to redeem " + rewardName + ".");
+                return;
+            }
+
+            let confirmRedeem = confirm("Are you sure you want to redeem " + rewardName + " for " + cost + " points?");
+            if (!confirmRedeem) {
+                return;
+            }
+
+            userPoints -= cost;
+            updatePoints();
+            alert("Success! You've redeemed: " + rewardName + "\nThank you for being a loyal customer!");
+        }
+
+        updatePoints();
+    </script>
+</body>
+</html>
