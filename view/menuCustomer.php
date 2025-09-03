@@ -31,7 +31,6 @@
     .menu-details h3 { margin: 0 0 5px; }
     .menu-details p { margin: 0 0 5px; color: #555; }
     .tags span {
-      display: inline-block;
       background: lightgreen;
       color: darkgreen;
       padding: 2px 6px;
