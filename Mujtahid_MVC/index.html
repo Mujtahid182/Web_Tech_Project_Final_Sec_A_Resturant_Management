@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Restaurant Management System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
+      color: #333;
+      line-height: 1.6;
+      padding: 50px 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #d94f43;
+      margin-bottom: 20px;
+    }
+    p {
+      margin-bottom: 30px;
+      color: #555;
+    }
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      list-style: none;
+    }
+    .menu li a {
+      display: block;
+      width: 200px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #333;
+      font-size: 1.1rem;
+    }
+    .menu li a:hover {
+      background: #1487e5;
+      color: white;
+    }
+    .footer{
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🍽️ Restaurant Management System</h1>
+    <p>Select a module to open:</p>
+    <ul class="menu">
+      <li><a href="./view/payment.php">Billing</a></li>
+      <li><a href="./view/fedback.php"> Feedback</a></li>
+      <li><a href="./view/loyality.php">Loyalty</a></li>
+      <li><a href="./view/salesReport.php"> Sales Report</a></li>
+      <li><a href="./view/error.html">Error</a></li>
+    </ul>
+  </div>
+    <footer>
+        &copy; 2025 Restaurant Management System | Support: support@restaurant.com
+    </footer>
+</body>
+</html>
