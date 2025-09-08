@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// ✅ Session check
+
 if(!isset($_SESSION['username']) || !isset($_SESSION['role'])){
     header("Location: login.php");
     exit();
@@ -14,7 +14,7 @@ if(!isset($_SESSION['username']) || !isset($_SESSION['role'])){
     <link rel="stylesheet" href="css/style.css">
     <script>
         function showMessage(event){
-            event.preventDefault(); // Stop page reload
+            event.preventDefault(); 
             alert("✅ Your message has been sent successfully!");
             return false;
         }
@@ -33,7 +33,7 @@ if(!isset($_SESSION['username']) || !isset($_SESSION['role'])){
         <button type="submit">Send</button>
     </form>
 
-    <!-- ✅ Correct Back to Dashboard -->
+    
     <?php if($_SESSION['role']=="admin"){ ?>
         <a href="dashboard.php" class="back-btn">⬅ Back to Dashboard</a>
     <?php } else { ?>

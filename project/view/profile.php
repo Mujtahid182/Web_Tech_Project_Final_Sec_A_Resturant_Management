@@ -39,7 +39,7 @@ foreach($users as $u){
         <button type="submit">Update Profile</button>
     </form>
 
-    <!-- ✅ Correct Back to Dashboard -->
+   
     <?php if($_SESSION['role']=="admin"){ ?>
         <a href="dashboard.php" class="back-btn">⬅ Back to Dashboard</a>
     <?php } else { ?>
