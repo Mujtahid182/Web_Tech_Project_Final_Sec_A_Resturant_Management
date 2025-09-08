@@ -1,17 +1,24 @@
 <?php
 session_start();
-
-
-if (isset($_REQUEST['error'])) {
-    if ($_REQUEST['error'] == "noname") {
-        echo " Name is required!</p>";
-    } elseif ($_REQUEST['error'] == "nopeople") {
-        echo " Number of people must be 1 or more!</p>";
-    } elseif ($_REQUEST['error'] == "notable") {
-        echo "Please select a table!</p>";
+if (isset($_SESSION['error'])) {
+    echo "<p style='color:red;'>";
+    switch ($_SESSION['error']) {
+        case "noname":
+            echo "Name is required!";
+            break;
+        case "nopeople":
+            echo "Number of people must be 1 or more!";
+            break;
+        case "notable":
+            echo "Please select a table!";
+            break;
     }
+    echo "<p></p>";
+    unset($_SESSION['error']); 
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,9 +29,16 @@ if (isset($_REQUEST['error'])) {
 <style>
   body { font-family: Arial, sans-serif; margin:20px; background:#f8f9fa;}
   h1 { text-align:center; color: darkblue; }
-  .form-container { background:white; padding:15px; border-radius:8px; width:400px; margin-bottom:20px;}
+
+
+  .form-container { background:white; padding:15px; border-radius:8px; width:400px; 
+    margin-bottom:20px; }
   label { display:block; margin-top:10px; font-weight:bold; }
+
+
   input, select { width:95%; padding:6px; margin-top:4px; }
+
+
   button { margin-top:10px; padding:6px 12px; cursor:pointer; }
   .error { color:red; font-size:12px; }
   .assigned-list, .waitlist { margin-top:20px; }
@@ -41,26 +55,29 @@ if (isset($_REQUEST['error'])) {
   
 <h1>Hostess Reservation Manager</h1>
 
+<form id="tableForm" action="../controller/tableHostValidation.php" method="post">
 <div class="form-container">
   <h3>Assign Table</h3>
+  
   <label>Name:</label>
-  <input type="text" id="custName">
+  <input type="text" id="custName" name="custName">
   <div class="error" id="nameError"></div>
 
   <label>Number of People:</label>
-  <input type="number" id="custPeople" min="1">
+  <input type="number" id="custPeople" name="custPeople" min="1">
   <div class="error" id="peopleError"></div>
 
   <label>Table Number:</label>
-  <select id="tableSelect">
+  <select id="tableSelect" name="tableSelect">
     <option value="">Select Table</option>
     <option>1</option><option>2</option><option>3</option>
     <option>4</option><option>5</option><option>6</option>
   </select>
   <div class="error" id="tableError"></div>
 
-  <button id="assignBtn">Assign Table</button>
+  <button type="submit" id="assignBtn">Assign Table</button>
 </div>
+</form>
 
 <div class="assigned-list">
   <h3>Assigned Tables</h3>
@@ -131,31 +148,39 @@ let waitlist = [
     else document.getElementById("tableError").textContent="";
   });
 
-  document.getElementById("assignBtn").addEventListener("click", ()=> {
-    const name = nameInput.value.trim();
-    const people = parseInt(peopleInput.value);
-    const tableNo = parseInt(tableSelect.value);
+  
+  document.getElementById("assignBtn").addEventListener("click", (e) => {
+  
 
-    // validation
-    let valid = true;
-    if(name===""){ document.getElementById("nameError").textContent="Name required"; valid=false; }
-    if(isNaN(people) || people<1){ document.getElementById("peopleError").textContent="Enter valid number of people"; valid=false; }
-    if(isNaN(tableNo)){ document.getElementById("tableError").textContent="Select table number"; valid=false; }
-    if(!valid) return;
-
-    if(assignedTables[tableNo-1]){
-      
+  const name = nameInput.value.trim();
+  const people = parseInt(peopleInput.value);
+  const tableNo = parseInt(tableSelect.value);
 
 
-      waitlist.push({table: tableNo, name:name, people:people});
-    } else {
-      
-      assignedTables[tableNo-1] = {name:name, people:people};
-    }
-    renderAssigned();
-    renderWaitlist();
-    nameInput.value=""; peopleInput.value=""; tableSelect.value="";
-  });
+  let valid = true;
+  if (name === "") {
+    document.getElementById("nameError").textContent = "Name required";
+    valid = false;
+  }
+  if (isNaN(people) || people < 1) {
+    document.getElementById("peopleError").textContent = "Enter valid number of people";
+    valid = false;
+  }
+  if (isNaN(tableNo)) {
+    document.getElementById("tableError").textContent = "Select table number";
+    valid = false;
+  }
+  if (!valid){
+    e.preventDefault();
+    return;}
+
+  renderAssigned();
+  renderWaitlist();
+  nameInput.value = "";
+  peopleInput.value = "";
+  tableSelect.value = "";
+});
+
 
   function renderAssigned(){
     for(let i=0;i<6;i++){

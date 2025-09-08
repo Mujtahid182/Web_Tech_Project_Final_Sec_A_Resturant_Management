@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Customer Menu</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #ecedee; text-align: center; justify-items: center;}
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f8f9fa; text-align: center; justify-items: center;}
     h1 { color: darkgreen; }
     .filters { margin-bottom: 15px; }
     .filters label { margin-right: 15px; }
@@ -31,6 +31,7 @@
     .menu-details h3 { margin: 0 0 5px; }
     .menu-details p { margin: 0 0 5px; color: #555; }
     .tags span {
+      display: inline-block;
       background: lightgreen;
       color: darkgreen;
       padding: 2px 6px;
@@ -47,18 +48,18 @@
 <body>
   <h1>Menu</h1>
 
-  
+  <!--filter options-->
   <div class="filters">
     <label><input type="checkbox" id="veganFilter"> Vegan</label>
     <label><input type="checkbox" id="glutenFreeFilter"> Gluten-Free</label>
   </div>
 
-  
+  <!--menu container -->
   <div id="menuList"></div>
 
 
 
-  
+  <!--pagination controls-->
   <div class="pagination">
     <label>Items per page:
       <select id="itemsPerPage">
@@ -102,7 +103,7 @@
       const end = start + itemsPerPage;
       const itemsToShow = filtered.slice(start, end);
 
-     
+      
       const menuList = document.getElementById("menuList");
       menuList.innerHTML = "";
       itemsToShow.forEach(item => {
@@ -123,7 +124,7 @@
         menuList.appendChild(div);
       });
 
-      
+      //pagination buttons
       const pageCount = Math.ceil(filtered.length / itemsPerPage);
       const pageButtons = document.getElementById("pageButtons");
       pageButtons.innerHTML = "";
@@ -137,8 +138,15 @@
     }
 
     
+    document.getElementById("veganFilter").addEventListener("change", ()=>{ currentPage=1; renderMenu(); });
+    document.getElementById("glutenFreeFilter").addEventListener("change", ()=>{ currentPage=1; renderMenu(); });
+    document.getElementById("itemsPerPage").addEventListener("change", (e)=>{
+      itemsPerPage = parseInt(e.target.value);
+      currentPage = 1;
+      renderMenu();
+    });
 
-   
+
     renderMenu();
   </script>
 </body>

@@ -3,14 +3,15 @@ session_start();
 
 $action = $_POST['action'] ?? "";
 
-if($action === "updateStock"){
+if($action === "logUpdate"){
     
-    $quantity = trim($_POST['quantity'] ?? "");
+    $quantity = trim($_POST['updateQty'] ?? "");
     if($quantity === "" || !is_numeric($quantity) || $quantity < 1){
         $_SESSION['error'] = "Invalid input for stock update.";
         header("Location: ../view/inventory.php");
         exit;
     }
+    
     $_SESSION['msg'] = "Stock updated to $quantity.";
     header("Location: ../view/inventory.php");
     exit;

@@ -11,23 +11,23 @@ if (isset($_POST['submit'])) {
 
  
     if ($name == "") {
-        header("location: ../view/tablereservationCus.php?error=name");
+        header("location:../view/tablereservationCus.php?error=name");
         exit;
     }
     if ($phone == "") {
-        header("location: ../view/tablereservationCus.php?error=phone");
+        header("location:../view/tablereservationCus.php?error=phone");
         exit;
     }
     if ($date == "") {
-        header("location: ../view/tablereservationCus.php?error=date");
+        header("location:../view/tablereservationCus.php?error=date");
         exit;
     }
     if ($time == "") {
-        header("location: ../view/tablereservationCus.php?error=time");
+        header("location:../view/tablereservationCus.php?error=time");
         exit;
     }
     if ($people == "") {
-        header("location: ../view/tablereservationCus.php?error=people");
+        header("location:../view/tablereservationCus.php?error=people");
         exit;
     }
 

@@ -47,23 +47,23 @@
   <div class="form-container">
     <form id="treserve" action="../controller/tableCusValidation.php" method="post">
       <label>Name:</label>
-    <input type="text" id="custName">
+    <input type="text" id="custName" name="custName">
     <div class="error" id="nameError"></div>
 
     <label>Phone:</label>
-    <input type="text" id="custPhone" maxlength="11">
+    <input type="text" id="custPhone" name="custPhone" maxlength="11">
     <div class="error" id="phoneError"></div>
 
     <label>Date:</label>
-    <input type="date" id="custDate">
+    <input type="date" id="custDate" name="custDate">
     <div class="error" id="dateError"></div>
 
     <label>Time:</label>
-    <input type="time" id="custTime">
+    <input type="time" id="custTime" name="custTime">
     <div class="error" id="timeError"></div>
 
     <label>Number of People:</label>
-    <select id="custPeople">
+    <select id="custPeople" name="custPeople">
       <option value="">Select</option>
       <option>1</option>
       <option>2</option>

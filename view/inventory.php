@@ -14,6 +14,8 @@ if (isset($_SESSION['error'])) {
     unset($_SESSION['error']);
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,6 +44,8 @@ if (isset($_SESSION['error'])) {
 <?php if($msg) echo "<p class='msg'>$msg</p>"; ?>
 
 <h2>Stock Count</h2>
+<form id="updateStock" action="../controller/inventoryValidation.php" method="post">
+  <input type="hidden" name="action" value="logUpdate">
 <table id="stockTable">
   <tr>
     <th>Ingredient</th>
@@ -52,8 +56,11 @@ if (isset($_SESSION['error'])) {
   </tr>
   
 </table>
+</form>
 
 <h2>Waste Log</h2>
+
+
 <form id="wasteForm" action="../controller/inventoryValidation.php" method="post">
   <input type="hidden" name="action" value="logWaste">
   <label>Ingredient:
@@ -66,7 +73,10 @@ if (isset($_SESSION['error'])) {
   <button type="submit" class="btn">Log Waste</button>
 </form>
 
+
+
 <h2>Recipe Usage Calculation</h2>
+
 <form id="recipeForm" action="../controller/inventoryValidation.php" method="post">
   <input type="hidden" name="action" value="useRecipe">
   <label>Recipe Name: 
@@ -101,6 +111,8 @@ if (isset($_SESSION['error'])) {
   ];
   let recipes = ["Chicken Curry", "Fried Rice", "Tomato Soup"];
 
+
+
   function renderTable() {
     const table = document.getElementById("stockTable");
     table.innerHTML = `
@@ -119,12 +131,17 @@ if (isset($_SESSION['error'])) {
         <td class="qty">${item.quantity}</td>
         <td>${item.par}</td>
         <td>
-          <input type="number" class="updateQty" min="1">
+          <input type="number" class="updateQty" name="updateQty" min="1">
+          <button type="submit" class="btn updateBtn">Update</button>
           <span class="error updateError"></span>
         </td>
         <td class="alertCell">${item.quantity < item.par ? "Below Par Level!" : ""}</td>
       `;
       table.appendChild(row);
+    });
+
+    document.querySelectorAll(".updateBtn").forEach((btn, i) => {
+      btn.addEventListener("click", () => updateStock(event, i, btn));
     });
   }
 
@@ -137,6 +154,28 @@ if (isset($_SESSION['error'])) {
       dropdown.appendChild(opt);
     });
   }
+
+
+function updateStock(e, index, btn) {
+    const row = btn.closest("tr");
+    const qtyCell = row.querySelector(".qty");
+    const input = row.querySelector(".updateQty");
+    const error = row.querySelector(".updateError");
+
+    let newQty = parseInt(input.value);
+    if(isNaN(newQty) || newQty < 1) {
+      error.textContent = "Enter valid quantity";
+      e.preventDefault();
+      return;
+    }
+
+    error.textContent = "";
+ 
+    input.value = "";
+   
+  }
+
+
 
   function populateRecipeDropdown() {
     const dropdown = document.getElementById("recipeName");
@@ -178,6 +217,26 @@ document.getElementById("wasteQty").addEventListener("input", function(){
 
 
 
+
+document.addEventListener("input", function(e){
+    if(e.target.classList.contains("updateQty")){
+      const error = e.target.parentElement.querySelector(".updateError");
+      if(e.target.value < 1){
+        error.textContent = "Enter valid quantity";
+      } else {
+        error.textContent = "";
+      }
+    }
+    if(e.target.id === "wasteQty"){
+      const wasteError = document.getElementById("wasteError");
+      if(e.target.value < 1){
+        wasteError.textContent = "Enter valid quantity";
+      } else {
+        wasteError.textContent = "";
+      }
+    }
+    
+  });
 
 
   renderTable();
