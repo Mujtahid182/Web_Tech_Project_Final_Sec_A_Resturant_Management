@@ -8,10 +8,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = trim($_POST['itemPrice'] ?? '');
     $vegan = isset($_POST['itemVegan']);
     $gluten = isset($_POST['itemGluten']);
+    $allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
 
     if ($name === '') {
         $errors[] = "Name is required.";
     }
+    
+    for ($i = 0; $i < strlen($name); $i++) {
+    if (strpos($allowed, $name[$i]) === false) {
+        $errors[] = "Symbols are not allowed in the name field.";
+       
+    }
+}
     if ($desc === '') {
         $errors[] = "Description is required.";
     }

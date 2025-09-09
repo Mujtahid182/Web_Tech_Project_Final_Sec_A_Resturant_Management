@@ -1,11 +1,16 @@
 <?php
-    session_start();
+session_start();
 
-    if (isset($_REQUEST['error'])) {
-        if ($_REQUEST['error'] == "null") {
-            echo "<p style='color:red'>Field cannot be empty!</p>";
-        }
-    }
+
+if (isset($_SESSION['error'])) {
+    echo "<p>{$_SESSION['error']}</p>";
+    unset($_SESSION['error']);
+}
+
+if (isset($_SESSION['msg'])) {
+    echo "<p >{$_SESSION['msg']}</p>";
+    unset($_SESSION['msg']);
+}
 ?>
 
 
@@ -61,10 +66,11 @@
     <button type="button" id="addBtn">Add</button>
     <button type="button" id="clearBtn">Clear List</button>
     <button type="submit" id="sendBtn">Send to Kitchen</button>
-  </form>
+
 
   <h3>Order List</h3>
   <ul id="orderList"></ul>
+  </form>
 
   <script>
     const menuItems = ["Grilled Chicken", "Vegan Burger", "Salad Bowl", "Pasta", "Soup"];

@@ -1,21 +1,17 @@
 <?php
-session_start();
-if (isset($_SESSION['error'])) {
-    echo "<p style='color:red;'>";
-    switch ($_SESSION['error']) {
-        case "noname":
-            echo "Name is required!";
-            break;
-        case "nopeople":
-            echo "Number of people must be 1 or more!";
-            break;
-        case "notable":
-            echo "Please select a table!";
-            break;
-    }
-    echo "<p></p>";
-    unset($_SESSION['error']); 
-}
+  session_start();
+  if (isset($_REQUEST['error'])) {
+      if ($_REQUEST['error'] == "name") {
+          echo "<p style='color:red'>Valid Name is required</p>";
+      
+      } elseif ($_REQUEST['error'] == "people") {
+          echo "<p style='color:red'>Number of people is required</p>";
+      } elseif ($_REQUEST['error'] == "table") {
+          echo "<p style='color:red'>Select Table</p>";
+      } elseif ($_REQUEST['error'] == "success") {
+          echo "<p style='color:red'>Success</p>";
+      }
+  }
 ?>
 
 
@@ -60,11 +56,11 @@ if (isset($_SESSION['error'])) {
   <h3>Assign Table</h3>
   
   <label>Name:</label>
-  <input type="text" id="custName" name="custName">
+  <input type="text" id="custName" name="cstName">
   <div class="error" id="nameError"></div>
 
   <label>Number of People:</label>
-  <input type="number" id="custPeople" name="custPeople" min="1">
+  <input type="number" id="custPeople" name="cstPeople" min="1">
   <div class="error" id="peopleError"></div>
 
   <label>Table Number:</label>
@@ -133,10 +129,24 @@ let waitlist = [
   const tableSelect = document.getElementById("tableSelect");
 
 
-  nameInput.addEventListener("input", ()=> {
-    if(nameInput.value.trim()==="") document.getElementById("nameError").textContent="Name required";
-    else document.getElementById("nameError").textContent="";
-  });
+ document.getElementById("custName").addEventListener("input", function() {
+  let allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ";
+  let value = this.value;
+  let errorMsg = "";
+
+  for (let i = 0; i < value.length; i++) {
+    if (!allowed.includes(value[i])) {
+      errorMsg = "Symbols and numbers are not allowed in name";
+      break;
+    }
+  }
+
+  if (value.trim() === "") {
+    errorMsg = "Name required";
+  }
+
+  document.getElementById("nameError").textContent = errorMsg;
+});
 
   peopleInput.addEventListener("input", ()=> {
     if(peopleInput.value<1) document.getElementById("peopleError").textContent="Enter valid number of people";
@@ -156,11 +166,20 @@ let waitlist = [
   const people = parseInt(peopleInput.value);
   const tableNo = parseInt(tableSelect.value);
 
+      let allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ";
 
   let valid = true;
-  if (name === "") {
+  if (name.trim() === "") {
     document.getElementById("nameError").textContent = "Name required";
     valid = false;
+  } else {
+    for (let i = 0; i < name.length; i++) {
+      if (!allowed.includes(name[i])) {
+        document.getElementById("nameError").textContent = "Symbols and numbers are not allowed in name";
+        valid = false;
+        break; 
+      }
+    }
   }
   if (isNaN(people) || people < 1) {
     document.getElementById("peopleError").textContent = "Enter valid number of people";

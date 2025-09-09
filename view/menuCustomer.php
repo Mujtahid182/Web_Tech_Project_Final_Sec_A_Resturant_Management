@@ -1,3 +1,12 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search'])) {
+  $searchTerm = trim($_POST['search']);
+  setcookie('search', $searchTerm, time() + 3600); 
+  $_COOKIE['search'] = $searchTerm; 
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +19,7 @@
     .filters label { margin-right: 15px; }
 
     .menu-item {
-      border: 1px solid #ccc;
+      border: 1px solid #e47f0cff;
       background: white;
       width: 70vw;
       padding: 10px;
@@ -19,7 +28,6 @@
       display: flex;
       align-items: center;
       gap: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .menu-item img {
       width: 100px;
@@ -31,7 +39,6 @@
     .menu-details h3 { margin: 0 0 5px; }
     .menu-details p { margin: 0 0 5px; color: #555; }
     .tags span {
-      display: inline-block;
       background: lightgreen;
       color: darkgreen;
       padding: 2px 6px;
@@ -51,7 +58,11 @@
   <!--filter options-->
   <div class="filters">
     <label><input type="checkbox" id="veganFilter"> Vegan</label>
-    <label><input type="checkbox" id="glutenFreeFilter"> Gluten-Free</label>
+    <label><input type="checkbox" id="glutenFreeFilter"> Gluten-Free</label><br><br>
+    <form method="POST" action="" style="margin-bottom: 15px;">
+  <input type="text" name="search" placeholder="Type Keyword" value="<?php echo isset($_COOKIE['search']) ? htmlspecialchars($_COOKIE['search']) : ''; ?>">
+  <button type="submit">Search</button>
+</form>
   </div>
 
   <!--menu container -->
@@ -98,6 +109,16 @@
         if (glutenFilter && !item.glutenFree) return false;
         return true;
       });
+
+      const searchTerm = "<?php echo isset($_COOKIE['search']) ? strtolower($_COOKIE['search']) : ''; ?>";
+
+      if (searchTerm) {
+        filtered = filtered.filter(item => 
+          item.name.toLowerCase().includes(searchTerm) || 
+          item.desc.toLowerCase().includes(searchTerm)
+        );
+      }
+
 
       const start = (currentPage-1) * itemsPerPage;
       const end = start + itemsPerPage;

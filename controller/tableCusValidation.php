@@ -8,12 +8,24 @@ if (isset($_POST['submit'])) {
     $time   = trim($_POST['custTime']);
     $people = trim($_POST['custPeople']);
     $req    = trim($_POST['custRequest']);
+    $allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
 
  
     if ($name == "") {
         header("location:../view/tablereservationCus.php?error=name");
         exit;
     }
+
+ for ($i = 0; $i < strlen($name); $i++) {
+    if (strpos($allowed, $name[$i]) === false) {
+        header("location:../view/tablereservationCus.php?error=name");
+        exit;
+       
+    }
+}
+  
+
+
     if ($phone == "") {
         header("location:../view/tablereservationCus.php?error=phone");
         exit;
