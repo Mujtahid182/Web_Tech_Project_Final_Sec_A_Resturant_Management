@@ -7,12 +7,11 @@
     body { font-family: Arial, sans-serif; margin: 20px; background: #f8f9fa; }
     h1 { color: darkblue; text-align: center; }
     .form-container {
-      border: 1px solid #ccc;
+      border: 1px solid #dd8a0eff;
       background: white;
       padding: 5px;
       border-radius: 8px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       text-align: center;
       justify-items: center;
     }
@@ -22,7 +21,7 @@
     .form-container button { padding: 8px 15px; margin-top: 10px; cursor: pointer; }
     .error { color: red; font-size: 12px; }
     .menu-item {
-      border: 1px solid #ccc;
+      border: 1px solid #e69011ff;
       background: white;
       padding: 10px;
       margin: 10px 0;
@@ -30,7 +29,6 @@
       display: flex;
       align-items: center;
       gap: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .menu-item img {
       width: 100px;
@@ -42,7 +40,7 @@
     .menu-details h3 { margin: 0 0 5px; }
     .menu-details p { margin: 0 0 5px; color: #555; }
     .tags span {
-      display: inline-block;
+      
       background: lightgreen;
       color: darkgreen;
       padding: 2px 6px;
@@ -55,6 +53,8 @@
     .pagination { margin-top: 15px; }
     .pagination button { margin: 3px; padding: 5px 10px; cursor: pointer; }
   </style>
+
+
 </head>
 <body>
   <h1>Menu Editor</h1>
@@ -63,7 +63,7 @@
   
     <form id="menuForm" action="../controller/menuManagerValidation.php" method="post" enctype="multipart/form-data">
       <table>
-        <tr><th colspan="2"><h3 id="formTitle">Add Menu Item</h3></th></tr>
+        <tr><th colspan="2"><h3 id="formTitle">Add Menu Item/ Edit Menu</h3></th></tr>
         <tr>
           <td><label for="itemName">Name:</label></td>
           <td>
@@ -130,10 +130,10 @@
   let itemsPerPage = 5;
 
   function renderMenu() {
-    const start = (currentPage-1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const itemsToShow = menuItems.slice(start, end);
-    const menuList = document.getElementById("menuList");
+    let start = (currentPage-1) * itemsPerPage;
+    let end = start + itemsPerPage;
+    let itemsToShow = menuItems.slice(start, end);
+    let menuList = document.getElementById("menuList");
     menuList.innerHTML = "";
     itemsToShow.forEach((item) => {
       const div = document.createElement("div");
@@ -168,13 +168,25 @@
     }
   }
 
+
+
+  
   function validateForm(name, desc, img, price){
     let valid = true;
+    let allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
     document.getElementById("nameError").textContent = "";
     document.getElementById("descError").textContent = "";
     document.getElementById("imgError").textContent = "";
     document.getElementById("priceError").textContent = "";
     if(name.trim()===""){ document.getElementById("nameError").textContent="Name is required"; valid=false; }
+    
+    for (let i = 0; i < name.length; i++) {
+  if (!allowed.includes(name[i])) {
+    document.getElementById("nameError").textContent = "Symbols are not allowed in name";
+    valid = false;
+    break;
+  }
+}
     if(desc.trim()===""){ document.getElementById("descError").textContent="Description is required"; valid=false; }
     if(img === ""){ document.getElementById("imgError").textContent="Please select an image file"; valid = false; }
     else { const allowed = ["jpg","jpeg","png"]; const ext = img.split('.').pop().toLowerCase(); if(!allowed.includes(ext)){ document.getElementById("imgError").textContent="Only JPG, JPEG, or PNG allowed"; valid = false; } }
@@ -184,10 +196,10 @@
 
   
   document.getElementById("menuForm").addEventListener("submit", function(e){
-    const name = document.getElementById("itemName").value;
-    const desc = document.getElementById("itemDesc").value;
-    const img = document.getElementById("itemImg").value;
-    const price = document.getElementById("itemPrice").value;
+    let name = document.getElementById("itemName").value;
+    let desc = document.getElementById("itemDesc").value;
+    let img = document.getElementById("itemImg").value;
+    let price = document.getElementById("itemPrice").value;
     if(!validateForm(name, desc, img, price)){
       e.preventDefault(); 
     }

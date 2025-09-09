@@ -5,14 +5,15 @@ $action = $_POST['action'] ?? "";
 
 if($action === "logUpdate"){
     
-    $quantity = trim($_POST['updateQty'] ?? "");
+    $quantity = trim($_POST['uquantity'] ?? "");
+     $ingredient = trim($_POST['uingredient'] ?? "");
     if($quantity === "" || !is_numeric($quantity) || $quantity < 1){
         $_SESSION['error'] = "Invalid input for stock update.";
         header("Location: ../view/inventory.php");
         exit;
     }
     
-    $_SESSION['msg'] = "Stock updated to $quantity.";
+    $_SESSION['msg'] = "$ingredient Stock Added: $quantity.";
     header("Location: ../view/inventory.php");
     exit;
 }
@@ -27,7 +28,7 @@ elseif($action === "logWaste"){
         header("Location: ../view/inventory.php");
         exit;
     }
-    $_SESSION['msg'] = "Waste of $quantity recorded.";
+    $_SESSION['msg'] = "Waste of $quantity $ingredient recorded.";
     header("Location: ../view/inventory.php");
     exit;
 }

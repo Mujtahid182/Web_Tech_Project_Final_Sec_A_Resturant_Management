@@ -2,7 +2,7 @@
   session_start();
   if (isset($_REQUEST['error'])) {
       if ($_REQUEST['error'] == "name") {
-          echo "<p style='color:red'>Name is required</p>";
+          echo "<p style='color:red'>Valid Name is required</p>";
       } elseif ($_REQUEST['error'] == "phone") {
           echo "<p style='color:red'>Valid 11-digit phone required</p>";
       } elseif ($_REQUEST['error'] == "date") {
@@ -77,7 +77,7 @@
     <label>Special Request:</label>
     <textarea id="custRequest"></textarea>
 
-    <div style="text-align: center;"><button type="submit">Reserve</button></div>
+    <div style="text-align: center;"><button type="submit">Request Reserve</button></div>
     <div id="successMsg" class="success"></div>
     </form>
 
@@ -85,14 +85,26 @@
      <script>
     function validateForm(name,phone,date,time,people){
       let valid=true;
+      let allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ";
       document.getElementById("nameError").textContent="";
       document.getElementById("phoneError").textContent="";
       document.getElementById("dateError").textContent="";
       document.getElementById("timeError").textContent="";
       document.getElementById("peopleError").textContent="";
 
-      if(name.trim()==="")
-      { document.getElementById("nameError").textContent="Name required"; valid=false; }
+       if (name.trim() === "") {
+    document.getElementById("nameError").textContent = "Name required";
+    valid = false;
+  } else {
+    for (let i = 0; i < name.length; i++) {
+      if (!allowed.includes(name[i])) {
+        document.getElementById("nameError").textContent = "Symbols and numbers are not allowed in name";
+        valid = false;
+        break; 
+      }
+    }
+  }
+
      if (phone.length !== 11 || isNaN(phone)) {
   document.getElementById("phoneError").textContent = "Valid 11-digit phone required";
   valid = false;
@@ -104,12 +116,12 @@
     }
 
     document.getElementById("treserve").addEventListener("submit", function(e){
-      const name=document.getElementById("custName").value;
-      const phone=document.getElementById("custPhone").value;
-      const date=document.getElementById("custDate").value;
-      const time=document.getElementById("custTime").value;
-      const people=document.getElementById("custPeople").value;
-      const req=document.getElementById("custRequest").value;
+      let name=document.getElementById("custName").value;
+      let phone=document.getElementById("custPhone").value;
+      let date=document.getElementById("custDate").value;
+      let time=document.getElementById("custTime").value;
+      let people=document.getElementById("custPeople").value;
+      let req=document.getElementById("custRequest").value;
 
       if(!validateForm(name,phone,date,time,people)) 
          e.preventDefault();
@@ -118,19 +130,37 @@
 
 
     
-    document.getElementById("custName").addEventListener("input", function() {
-      if(this.value.trim() === "") document.getElementById("nameError").textContent="Name required";
-      else document.getElementById("nameError").textContent="";
-    });
+  document.getElementById("custName").addEventListener("input", function() {
+  let allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ";
+  let value = this.value;
+  let errorMsg = "";
+
+  for (let i = 0; i < value.length; i++) {
+    if (!allowed.includes(value[i])) {
+      errorMsg = "Symbols and numbers are not allowed in name";
+      break;
+    }
+  }
+
+  if (value.trim() === "") {
+    errorMsg = "Name required";
+  }
+
+  document.getElementById("nameError").textContent = errorMsg;
+});
+
+
+
 
     document.getElementById("custPhone").addEventListener("input", function() {
-      if (this.value.length !== 11 || isNaN(phone)) {
-  document.getElementById("phoneError").textContent = "Valid 11-digit phone required";
+      let phone = this.value;
+      if (this.value.length <11 || isNaN(phone)) {
+  document.getElementById("phoneError").textContent = "11-digit phone required";
   
 }
 
-      if(this.value.length === 11)
-      {document.getElementById("phoneError").textContent="";}
+      else
+      document.getElementById("phoneError").textContent="";
     });
 
     document.getElementById("custDate").addEventListener("change", function() {

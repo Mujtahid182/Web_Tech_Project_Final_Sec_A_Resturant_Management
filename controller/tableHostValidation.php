@@ -1,30 +1,39 @@
 <?php
 session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['custName'] ?? '');
-    $people = trim($_POST['custPeople'] ?? '');
+if (isset($_POST['submit'])) {
+     $name = trim($_POST['cstName'] ?? '');
+    $people = trim($_POST['cstPeople'] ?? '');
     $table = trim($_POST['tableSelect'] ?? '');
+    $allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
+   
 
-    if ($name === "") {
-        $_SESSION['error'] = "noname";
-        header("Location: ../view/tableReservationHostes.php");
+  if ($name == "") {
+        header("location:../view/tableReservationHoste.php?error=name");
         exit;
     }
 
-    if ($people === "" || !is_numeric($people) || $people < 1) {
-        $_SESSION['error'] = "nopeople";
-        header("Location: ../view/tableReservationHostes.php");
+ for ($i = 0; $i < strlen($name); $i++) {
+    if (strpos($allowed, $name[$i]) === false) {
+         header("location:../view/tableReservationHostes.php?error=name");
+        exit;
+       
+    }
+}
+  
+
+     if ($people == "") {
+        header("location:../view/tableReservationHostes.php?error=people");
         exit;
     }
 
     if ($table === "") {
-        $_SESSION['error'] = "notable";
-        header("Location: ../view/tableReservationHostes.php");
+        
+         header("location:../view/tableReservationHostes.php?error=table");
         exit;
     }
 
-    echo "<h2 style='color:green;'>Table $table assigned to $name for $people people!</h2>";
+    
 }
 
 

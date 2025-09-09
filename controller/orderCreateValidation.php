@@ -1,22 +1,22 @@
 <?php
-    session_start();
+session_start();
 
-    if (isset($_POST['submit'])) {
-        $quantity = trim($_POST['quantity']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'sendOrder') {
+    
+    
+    $orderData = isset($_POST['orderData']) ? json_decode($_POST['orderData'], true) : [];
 
-        
-        if ($quantity === "") {
-            header("location:../view/orderCreateServers.php?error=null");
-            exit;
-        }
-
-        
-        else if (!is_numeric($quantity) || $quantity < 1) {
-            header("location:../view/orderCreateServers.php?error=lessthan1");
-            exit;
-        }else{
-
-        
-        echo "Form submitted successfully! You entered: ";}
+   
+    if (!is_array($orderData) || count($orderData) === 0) {
+        $_SESSION['error'] = "Please add at least one item before sending!";
+        header("Location: ../view/orderCreateServers.php");
+        exit();
     }
+
+
+    $_SESSION['msg'] = "Order sent successfully!";
+    header("Location: ../view/orderCreateServers.php");
+    exit();
+}
 ?>
+
