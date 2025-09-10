@@ -1,0 +1,122 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Loyalty Card */
+.loyalty-card {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.loyalty-card h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.points-display {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #fd5d01;
+    margin: 10px 0;
+}
+
+/* Rewards Catalog */
+.rewards-catalog {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.rewards-catalog h2 {
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.4rem;
+}
+
+.reward-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.reward-item:last-child {
+    border-bottom: none;
+}
+
+.reward-info strong {
+    display: block;
+    font-size: 1.1rem;
+    color: #111;
+}
+
+.reward-info p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 4px;
+}
+
+.reward-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reward-points {
+    font-weight: bold;
+    color: #333;
+}
+
+.btn {
+    background: #ff7b00;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn:hover {
+    background: #e56a00;
+}
+
+/* Message Display */
+.message {
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 5px;
+    border: 1px solid #c3e6cb;
+    color: #721c24;
+    background-color: #d4edda;
+}
