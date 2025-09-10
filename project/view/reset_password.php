@@ -14,5 +14,6 @@
         </form>
         <p><a href="login.php">Back to Login</a></p>
     </div>
+    <script src="loginValidation.js"></script>
 </body>
 </html>

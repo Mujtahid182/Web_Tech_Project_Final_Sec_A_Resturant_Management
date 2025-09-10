@@ -28,5 +28,6 @@
         </form>
         <p><a href="register.php">Register</a> | <a href="reset_password.php">Reset Password</a></p>
     </div>
+    <script src="loginValidation.js"></script>
 </body>
 </html>

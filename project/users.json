@@ -10,5 +10,11 @@
         "email": "kabir@gmail.com",
         "password": "333333",
         "role": "user"
+    },
+    {
+        "name": "mita",
+        "email": "mita@gmail.com",
+        "password": "111111",
+        "role": "user"
     }
 ]
