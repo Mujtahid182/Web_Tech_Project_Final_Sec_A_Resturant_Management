@@ -7,7 +7,7 @@ if (!isset($_SESSION["status"])) {
   header("location: login.html?error=invalid_user");
 }
 
-// // Cookie
+// Cookie
 //  setcookie('status', true, time()+900, '/');
 //     //  setcookie('status', true, time()-10, '/');
 //  if(!isset($_COOKIE['status'])){
@@ -67,10 +67,8 @@ if (isset($_GET['error'])) {
       </div>
 
       <form
-        action="../controller/paymentCheck.php"
-        method="post"
-        class="payment-form"
-        onsubmit="return checkValidation()">
+
+        class="payment-form">
         <h2>Payment Method</h2>
 
         <div class="form-group">
@@ -99,7 +97,7 @@ if (isset($_GET['error'])) {
           <p id="tipError" class="error"><?= $errorMsg ?></p>
         </div>
 
-        <button type="submit" class="btn">Process Payment</button>
+        <button type="button" class="btn" onclick="checkValidation()">Process Payment</button>
       </form>
     </div>
 
@@ -132,34 +130,54 @@ if (isset($_GET['error'])) {
 
 
       if (method === "") {
-        document.getElementById("methodError").innerHTML ="Please select a payment method.";
+        document.getElementById("methodError").innerHTML = "Please select a payment method.";
         return false;
       }
 
       if (tipSelect === "") {
-        document.getElementById("tipError").innerHTML ="Please select a tip option.";
+        document.getElementById("tipError").innerHTML = "Please select a tip option.";
         return false;
       }
 
-      var tipAmount = parseFloat(tipSelect);
-      var subtotal = 28.98;
-      var tax = 2.32;
-      var total = subtotal + tax;
-      var finalTotal = total + tipAmount;
+      let paymentOBJ = {
+        method: method,
+        tip: tipSelect
+      };
 
-      var tipLine = document.getElementById("tipLine");
-      tipLine.innerHTML =
-        "Tip: Taka " +
-        tipAmount.toFixed(2) +
-        " (" +
-        ((tipAmount / total) * 100).toFixed(0) +
-        "%)";
+      let xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "../controller/fedbackcheck.php", true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-      var finalLine = document.getElementById("finalLine");
-      finalLine.innerHTML =
-        "<strong>Final: Taka " + finalTotal.toFixed(2) + "</strong>";
+      let data = JSON.stringify(paymentOBJ);
+      xhttp.send("payment=" + encodeURIComponent(data));
 
-      return true;
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+        }
+      };
+
+
+
+      // var tipAmount = parseFloat(tipSelect);
+      // var subtotal = 28.98;
+      // var tax = 2.32;
+      // var total = subtotal + tax;
+      // var finalTotal = total + tipAmount;
+
+      // var tipLine = document.getElementById("tipLine");
+      // tipLine.innerHTML =
+      //   "Tip: Taka " +
+      //   tipAmount.toFixed(2) +
+      //   " (" +
+      //   ((tipAmount / total) * 100).toFixed(0) +
+      //   "%)";
+
+      // var finalLine = document.getElementById("finalLine");
+      // finalLine.innerHTML =
+      //   "<strong>Final: Taka " + finalTotal.toFixed(2) + "</strong>";
+
+      // return true;
     }
   </script>
 </body>

@@ -2,10 +2,8 @@
 
 
 session_start();
-
 $_SESSION["status"] = true;
 //session_destroy();
-
 if (!isset($_SESSION["status"])) {
     header("location: login.html?error=invalid_user");
 }
@@ -19,20 +17,32 @@ if (!isset($_SESSION["status"])) {
 
 
 $errorMsg = "";
-$feedback = "";
+$allFeedbacks = [];
 
-if (isset($_GET['error'])) {
-    if ($_GET['error'] === 'empty') {
-        $errorMsg = "Feedback cannot be empty";
-    } elseif ($_GET['error'] === 'min_length') {
-        $errorMsg = "Feedback must be at least 5 characters long";
-    } elseif ($_GET['error'] === 'max_length') {
-        $errorMsg = "Feedback is too long (maximum 1000 characters)";
-    }
-}
-if (isset($_GET['success'])) {
-    $feedback = urldecode($_GET['success']);
-}
+// if (isset($_GET['error'])) {
+//     if ($_GET['error'] === 'empty') {
+//         $errorMsg = "Feedback cannot be empty";
+//     } elseif ($_GET['error'] === 'min_length') {
+//         $errorMsg = "Feedback must be at least 5 characters long";
+//     } elseif ($_GET['error'] === 'max_length') {
+//         $errorMsg = "Feedback is too long (maximum 1000 characters)";
+//     }
+// }
+// if (isset($_GET['success'])) {
+
+// }
+// if (isset($_SESSION['all_feedbacks'])) {
+//     $allFeedbacks = $_SESSION['all_feedbacks'];
+// }
+
+
+// print_r($allFeedbacks);
+
+
+
+
+
+
 ?>
 
 
@@ -48,7 +58,8 @@ if (isset($_GET['success'])) {
 
 <body class="container">
 
-    <form action="../controller/fedbackcheck.php" method="post" class="payment-form" onsubmit="return checkValidation()">
+    <!-- <form action="../controller/fedbackcheck.php" method="post" class="payment-form" onsubmit="return checkValidation()"> -->
+    <form>
         <div>
             <h1>Customer Feedback</h1>
 
@@ -57,55 +68,27 @@ if (isset($_GET['success'])) {
                 <textarea name="feedback" id="userFeedback" placeholder="Tell us about your experience..."></textarea>
 
                 <p id="feedbackError" class="error"><?= $errorMsg; ?></p>
-                <button class="btn" type="submit">Submit</button>
+                <button class="btn" type="button" onclick="checkValidation()">Submit</button>
             </div>
         </div>
     </form>
 
-    <div class="feedback-list">
+    <div id="feedback-container" class="feedback-list">
         <p>All feedback:</p>
-        
-    <div class="feedback-item">
-        <p class="feedback-text"> <?=$feedback;?> </p>
-            <p class="feedback-time">Aug 14, 2025 • 8:30 PM</p>
-        </div>
-        <div class="feedback-item">
-            <p class="feedback-text">Excellent service and delicious food! The staff was very attentive and the
-                burger was cooked perfectly.</p>
-            <p class="feedback-time">Aug 14, 2025 • 8:30 PM</p>
-        </div>
 
-        <div class="feedback-item">
-            <p class="feedback-text">Great experience overall. Only suggestion would be to have more vegetarian
-                options on the menu.</p>
-            <p class="feedback-time">Aug 13, 2025 • 7:15 PM</p>
-        </div>
-
-        <div class="feedback-item">
-            <p class="feedback-text">Food was good but waited 25 minutes for our order. Table was clean and staff
-                was friendly though.</p>
-            <p class="feedback-time">Aug 12, 2025 • 6:45 PM</p>
-        </div>
-
-        <div class="feedback-item">
-            <p class="feedback-text">Perfect for family dinner! Kids loved the menu and the staff was so patient.
-            </p>
-            <p class="feedback-time">Aug 11, 2025 • 7:30 PM</p>
-        </div>
     </div>
 
     <footer class="footer">
         &copy; 2025 Restaurant Management System | Support: support@restaurant.com
     </footer>
-    </div>
     <script>
         function checkValidation() {
-            const feedbackInput = document.getElementById('userFeedback');
-            const errorElement = document.getElementById('feedbackError');
-            const feedbackText = feedbackInput.value.trim();
+            let feedbackInput = document.getElementById('userFeedback');
+            let errorElement = document.getElementById('feedbackError');
+            let feedbackContainer = document.getElementById('feedback-container');
+            let feedbackText = feedbackInput.value.trim();
 
             errorElement.innerHTML = '';
-
             if (feedbackText === '') {
 
                 errorElement.innerHTML = 'Feedback cannot be empty.';
@@ -123,24 +106,59 @@ if (isset($_GET['success'])) {
             }
 
 
-            const newItem = document.createElement("div");
-            newItem.className = "feedback-item";
+            let feedback = {
+                feedbackText
+            } //shorthand of object
 
-            const textP = document.createElement("p");
-            textP.className = "feedback-text";
-            textP.innerHTML = feedbackText;
 
-            const timeP = document.createElement("p");
-            timeP.className = "feedback-time";
-            const now = new Date();
-            timeP.innerHTML = now.toLocaleDateString() + " • " + now.toLocaleTimeString();
-            
-            newItem.appendChild(textP);
-            newItem.appendChild(timeP);
-            const feedbackList = document.querySelector(".feedback-list");
-            feedbackList.prepend(newItem);
+            let data = JSON.stringify(feedback);
+            // console.log(data)
 
-            return true;
+
+            let xhttp = new XMLHttpRequest(); //SERVER CONNECTOR
+            xhttp.open('POST', '../controller/fedbackcheck.php', true) //ASYNCHRONOUS
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send('feedback=' + data)
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+
+                    console.log(this.responseText);
+                    feedbackData = JSON.parse(this.responseText);
+
+                    console.log(feedbackData)
+
+                    for (let i = 0; i < feedbackData.length; i++) {
+                        let data = feedbackData[i];
+                        feedbackContainer.innerHTML +=
+                            '<div class="feedback-item">' +
+                            '<p class="feedback-text">'+data.fedback_text+'</p>' +
+                            '<p class="feedback-time">'+data.created_at+'</p>' +
+                            '</div>';
+                    }
+
+                }
+            }
+
+
+
+
+
+            // const newItem = document.createElement("div");
+            // newItem.className = "feedback-item";
+
+            // const textP = document.createElement("p");
+            // textP.className = "feedback-text";
+            // textP.innerHTML = feedbackText;
+
+            // const timeP = document.createElement("p");
+            // timeP.className = "feedback-time";
+            // const now = new Date();
+            // timeP.innerHTML = now.toLocaleDateString() + " • " + now.toLocaleTimeString();
+
+            // newItem.appendChild(textP);
+            // newItem.appendChild(timeP);
+            // const feedbackList = document.querySelector(".feedback-list");
+            // feedbackList.prepend(newItem);
 
         }
     </script>
