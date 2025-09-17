@@ -1,28 +1,27 @@
 <?php
-session_start();
+require_once '../model/loyalityModel.php';
 
-if (!isset($_SESSION['points'])) {
-    $_SESSION['points'] = 2450;
+$data = $_POST['points'];
+$loyaltyObj = json_decode($data);
+
+$userid = $loyaltyObj->user_id;
+$cost = $loyaltyObj->points;
+
+if ($cost <= 0) {
+    echo json_encode(['success' => false, 'message' => 'Invalid reward amount']);
+    exit;
 }
 
-$currentPoints = $_SESSION['points'];
-
-
-$reward = $_POST['reward'] ;
-$cost = (int)($_POST['cost'] );
-
-if ($cost <= 0 || $reward === '') {
-    header("Location: ../view/loyality.php?msg=Invalid_reward_request&type=error");
+if ($cost > 10000) {
+    echo json_encode(['success' => false, 'message' => 'Not enough points to redeem this reward']);
+    exit;
 }
 
-if ($currentPoints < $cost) {
-    $msg = "Not enough points to redeem $reward.";
-    header("Location: ../view/loyality.php?msg=$msg&type=error");
+$success = redeemPoints($cost);
+
+if ($success == true) {
+    $newpoints = getCurrentPoints();
+    echo json_encode(['success' => true, 'message' => 'You successfully redeemed the reward!', 'points' => $newpoints]);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Not enough points to redeem this reward']);
 }
-
-$_SESSION['points'] = $_SESSION['points']- $cost;
-$msg = "Success! You redeemed: $reward";
-header("Location: ../view/loyality.php?msg=$msg&type=success");
-
-
-?>

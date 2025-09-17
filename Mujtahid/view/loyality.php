@@ -1,55 +1,37 @@
 <?php
-session_start();
+// session_start();
 
-$_SESSION["status"] = true;
-// session_destroy();
-if (!isset($_SESSION["status"])) {
-    header("location: login.html?error=invalid_user");
-}
+// $_SESSION["status"] = true;
 
+// if (!isset($_SESSION["status"])) {
+//     header("Location: login.html?error=invalid_user");
+//     exit;
+// }
 
-// Cookie
-//  setcookie('status', true, time()+900, '/');
-//     //  setcookie('status', true, time()-10, '/');
-//  if(!isset($_COOKIE['status'])){
-//         header('location: login.html?error=invalid_user');
-//     }
-
-
-if (!isset($_SESSION['points'])) {
-    $_SESSION['points'] = 0;
-}
-
-$currentPoints = $_SESSION['points'];
-
-$message = '';
-$messageClass = '';
-if (isset($_GET['msg'])) {
-    $message = $_GET['msg'];
-    $messageClass = "message";
-}
+require_once '../model/loyalityModel.php';
+$currentPoints = getCurrentPoints();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Loyalty Program | Restaurant Management System</title>
     <link rel="stylesheet" href="../assets/css/loyality.css">
 </head>
-
 <body>
     <div class="container">
         <h1>Loyalty Program</h1>
 
-        <div id="messageBox" class=<?= $messageClass ?>><?= $message  ?></div>
+        <div id="messageBox" class="<?= isset($_GET['msg']) ? 'message' : '' ?>">
+            <?php if (isset($_GET['msg'])) echo htmlspecialchars($_GET['msg']); ?>
+        </div>
 
         <div class="loyalty-card">
             <h2>Welcome, Mujtahid!</h2>
             <p>Your Loyalty Points</p>
-            <div id="pointsDisplay" class="points-display"></div>
+            <div id="pointsDisplay" class="points-display"><?= number_format($currentPoints) ?></div>
             <p>You can redeem rewards below using your points.</p>
         </div>
 
@@ -58,24 +40,23 @@ if (isset($_GET['msg'])) {
 
             <div class="reward-item">
                 <div class="reward-info">
-                    <strong>Free Cake</strong>
-                     <p>Save on your favorite Cake</p>
-
+                    <strong>Free Appetizer</strong>
+                    <p>Perfect start to your meal</p>
                 </div>
                 <div class="reward-actions">
                     <span class="reward-points">500 pts</span>
-                    <button class="btn" onclick="redeemReward('Free Cake', 500)">Redeem</button>
+                    <button class="btn" onclick="redeemReward('Free Appetizer', 500)">Redeem</button>
                 </div>
             </div>
 
             <div class="reward-item">
                 <div class="reward-info">
-                    <strong>Free Ice_cream</strong>
-                    <p>Save on your favorite Ice-Cream</p>
+                    <strong>$10 Off Main Course</strong>
+                    <p>Save on your favorite dish</p>
                 </div>
                 <div class="reward-actions">
                     <span class="reward-points">1,000 pts</span>
-                    <button class="btn" onclick="redeemReward('Free Ice-cream', 1000)">Redeem</button>
+                    <button class="btn" onclick="redeemReward('$10 Off Main Course', 1000)">Redeem</button>
                 </div>
             </div>
 
@@ -94,25 +75,50 @@ if (isset($_GET['msg'])) {
     </div>
 
     <script>
-        let currentPoints = 2450;
-        document.getElementById("pointsDisplay").innerHTML = currentPoints.toLocaleString();
-
-        function redeemReward(reward, cost) {
-            if (currentPoints >= cost) {
-                currentPoints -= cost;
-                document.getElementById("pointsDisplay").innerHTML = currentPoints.toLocaleString();;
-                showMessage("You successfully redeemed: " + reward);
-            } else {
-                showMessage("Not enough points to redeem " + reward);
-            }
-        }
-
-        function showMessage(msg) {
+        function showMessage(msg, type) {
             const box = document.getElementById("messageBox");
             box.innerHTML = msg;
             box.className = "message";
+          
+        }
+
+        function redeemReward(reward, cost) {
+            let errorElement = document.getElementById("messageBox");
+            let pointsDisplay = document.getElementById("pointsDisplay");
+
+            if (cost <= 0) {
+                errorElement.innerHTML = 'Invalid reward amount.';
+                return false;
+            }
+
+            let loyaltyData = {
+                user_id: 1,  
+                points: cost 
+            };
+
+
+            let data = JSON.stringify(loyaltyData);
+            let xhttp = new XMLHttpRequest();
+            xhttp.open('POST', '../controller/loyalityCheck.php', true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            
+       
+            xhttp.send('points=' + data);
+
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    let response = JSON.parse(this.responseText);
+
+                    if (response.success) {
+                        pointsDisplay.innerHTML = response.points.toLocaleString();
+                        showMessage("You successfully redeemed: " + reward, 'success');
+                    } else {
+                        showMessage(" " + response.message, 'error');
+                    }
+                }
+            };
         }
     </script>
 </body>
-
 </html>
